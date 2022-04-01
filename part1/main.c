@@ -58,6 +58,7 @@ int main()
 
     for (i = 0; i < size_input; i++)
     {
+        printf("Enter numbers:\n");
         if (scanf("%d", &number) < 1)
         {
             status = STATUS_SCANF_FAILED;
@@ -69,10 +70,11 @@ int main()
             if (TRUE == is_power)
             {
                 power_sum += power;
-                printf("The number %d is a power of 2: %d=2^%d\n",number, number, power);
+                printf("The number %d is a power of 2: %d = 2^%d\n",number, number, power);
             }
         }
     }
+    printf("Total exponent sum is %d",power_sum);
 cleanup:
     return (int) status;
 
