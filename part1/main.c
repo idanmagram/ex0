@@ -1,70 +1,139 @@
-#include <stdio.h>
-#include <stdlib.h>
+/**************************************************************************
+ * filename:    hw0part1.c
+ * brief:       Reading numbers and checking if the numbers
+ *              are power of 2.
+ * author:      Idan Magram
+ * ID number:   318735156
+ * date:        1.4.22
+**************************************************************************/
 
-int getting_size_input();
-int power_of_number(double divided_number);
+/** Headers **************************************************************/
+#include <stdio.h>
+
+/** Macros ***************************************************************/
+
+/** Enums ****************************************************************/
+enum exit_status {
+    STATUS_SUCCESS,
+    STATUS_SCANF_FAILED,
+    STATUS_FAILURE,
+    STATUS_PART1_POWER_OF_NUMBER_INVALID_PARAMS,
+    STATUS_PART1_GETTING_INPUT_INVALID_PARAMS,
+    STATUS_PART1_GETTING_INPUT_SCAN_SIZE_FAIlED,
+    STATUS_PART1_GETTING_INPUT_SIZE_INVALID
+};
+
+enum bool {
+    FALSE,
+    TRUE
+};
+
+/** Functions *************************************************************/
+enum exit_status
+getting_size_input(int* size_input);
+enum exit_status
+power_of_number(int number,
+                int *power,
+                enum bool* is_power);
+
+/**************************************************************************
+ * Function:    main
+ * @brief       Reading numbers and checking if the numbers
+ *              are power of 2.
+ * @return      exit status
+**************************************************************************/
 
 
 int main()
 {
-    int size_input;
+    enum exit_status status = STATUS_SUCCESS;
+    int size_input = 0;
     int number;
     int power = 0;
-    double divided_number;
     int power_sum = 0;
     int i;
+    enum bool is_power = FALSE;
 
-    size_input = getting_size_input();
+    getting_size_input(&size_input);
 
     for (i = 0; i < size_input; i++)
     {
-        if (scanf(" %d", &number) != 1)
+        if (scanf("%d", &number) < 1)
         {
-            return 0;
+            status = STATUS_SCANF_FAILED;
+            goto cleanup;
         }
         else
         {
-            divided_number = (double)(number);
-            power = power_of_number(divided_number);
-            if (power != -1)
+            status = power_of_number(number, &power, &is_power);
+            if (TRUE == is_power)
             {
                 power_sum += power;
                 printf("The number %d is a power of 2: %d=2^%d\n",number, number, power);
             }
         }
     }
+cleanup:
+    return (int) status;
 
-    return 0;
 }
 
-int getting_size_input()
+enum exit_status getting_size_input(int* size_input)
 {
-    int size_input = 0;
-    printf ("Enter size of input:\n");
-    scanf ("%d",&size_input);
+    enum exit_status status = STATUS_FAILURE;
+    int libc_retval = 0;
+    int size_input_local = 0;
 
-    if(size_input <= 0)
-    {
-        printf("Invalid size");
-        return 0;
+    if (NULL == size_input) {
+        status = STATUS_PART1_GETTING_INPUT_INVALID_PARAMS;
+        goto cleanup;
     }
-    return size_input;
+
+    (void) printf("Enter size of input:\n");
+    libc_retval = scanf("%d", &size_input_local);
+    if (1 > libc_retval) {
+        status = STATUS_PART1_GETTING_INPUT_SCAN_SIZE_FAIlED;
+        goto cleanup;
+    }
+
+    if(0 >= size_input_local) {
+        (void) printf("Invalid size");
+        status = STATUS_PART1_GETTING_INPUT_SIZE_INVALID;
+        goto cleanup;
+    }
+    *size_input = size_input_local;
+    status = STATUS_SUCCESS;
+cleanup:
+    return status;
 
 }
 
-int power_of_number(double divided_number)
-{
-    int power = 0;
+enum exit_status
+power_of_number(int number,
+                int *power,
+                enum bool* is_power) {
+    enum exit_status status = STATUS_FAILURE;
+    double division = 0;
+    int power_local = 0;
 
-    while(divided_number > 1)
-    {
-        divided_number /= 2;
-        power++;
+    if ((0 > number) || (NULL == power) || (NULL == is_power)) {
+        status = STATUS_PART1_POWER_OF_NUMBER_INVALID_PARAMS;
+        goto cleanup;
     }
-    if (divided_number == 1)
-    {
-        return power;
+
+    division = (double)(number);
+    while (1 < division) {
+        division /= 2;
+        power_local++;
     }
-    return -1;
+    if (division == 1) {
+        *is_power = TRUE;
+    } else {
+        *is_power = FALSE;
+    }
+
+    *power = power_local;
+    status = STATUS_SUCCESS;
+cleanup:
+    return (int) status;
 }
-
