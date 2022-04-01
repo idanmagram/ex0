@@ -56,9 +56,9 @@ int main()
 
     getting_size_input(&size_input);
 
+    printf("Enter numbers:\n");
     for (i = 0; i < size_input; i++)
     {
-        printf("Enter numbers:\n");
         if (scanf("%d", &number) < 1)
         {
             status = STATUS_SCANF_FAILED;
