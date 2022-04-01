@@ -122,6 +122,7 @@ power_of_number(int number,
         status = STATUS_PART1_POWER_OF_NUMBER_INVALID_PARAMS;
         goto cleanup;
     }
+    printf("number is %d",number);
 
     division = (double)(number);
     while (1 < division) {
