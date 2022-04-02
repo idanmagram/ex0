@@ -9,6 +9,7 @@
 
 /** Headers **************************************************************/
 #include <stdio.h>
+#include <stdlib.h>
 
 /** Macros ***************************************************************/
 
@@ -20,7 +21,9 @@ enum exit_status {
     STATUS_PART1_POWER_OF_NUMBER_INVALID_PARAMS,
     STATUS_PART1_GETTING_INPUT_INVALID_PARAMS,
     STATUS_PART1_GETTING_INPUT_SCAN_SIZE_FAIlED,
-    STATUS_PART1_GETTING_INPUT_SIZE_INVALID
+    STATUS_PART1_GETTING_INPUT_SIZE_INVALID,
+    STATUS_PART1_MAIN_ARRAY_ALLOCATION_FAILED,
+    STATUS_PART1_MAIN_GETTING_SIZE_INPUT_FAILED
 };
 
 enum bool {
@@ -53,31 +56,53 @@ int main()
     int power_sum = 0;
     int i;
     enum bool is_power = FALSE;
+    int* arr = NULL;
+    int libc_retval = 0;
 
-    getting_size_input(&size_input);
+    status = getting_size_input(&size_input);
+    if (status != STATUS_SUCCESS) {
+        status = STATUS_PART1_MAIN_GETTING_SIZE_INPUT_FAILED;
+        goto cleanup;
+    }
+    if (0 >= size_input) {
+        goto cleanup;
+    }
+    arr = (int*) malloc(size_input * sizeof(int));
+    if (NULL == arr) {
+        status = STATUS_PART1_MAIN_ARRAY_ALLOCATION_FAILED;
+        goto cleanup;
+    }
 
-    printf("Enter numbers:\n");
-    for (i = 0; i < size_input; i++)
-    {
-        if (scanf("%d", &number) < 1)
-        {
+    (void) printf("Enter numbers:\n");
+    for (i = 0; i < size_input; i++) {
+        libc_retval = scanf("%d", &number);
+        printf("number is %d",number);
+        if (1 > libc_retval) {
+            (void) printf("Invalid number");
             status = STATUS_SCANF_FAILED;
             goto cleanup;
-        }
-        else
-        {
-            status = power_of_number(number, &power, &is_power);
-            if (TRUE == is_power)
-            {
-                power_sum += power;
-                printf("The number %d is a power of 2: %d = 2^%d\n",number, number, power);
-            }
+        } else {
+            arr[i] = number;
         }
     }
-    printf("Total exponent sum is %d",power_sum);
+    for (i = 0; i < size_input; i++) {
+        status = power_of_number(arr[i], &power, &is_power);
+        if (status != STATUS_SUCCESS) {
+            goto cleanup;
+        }
+        else if (TRUE == is_power) {
+            power_sum += power;
+            (void) printf("The number %d is a power of 2: %d = 2^%d\n", arr[i], arr[i], power);
+        }
+    }
+    (void) printf("Total exponent sum is %d\n", power_sum);
+    status = STATUS_SUCCESS;
 cleanup:
+    if ((STATUS_PART1_MAIN_GETTING_SIZE_INPUT_FAILED != status) &&
+        (STATUS_PART1_MAIN_ARRAY_ALLOCATION_FAILED != status)) {
+        (void) free(arr);
+    }
     return (int) status;
-
 }
 
 enum exit_status getting_size_input(int* size_input)
@@ -100,8 +125,6 @@ enum exit_status getting_size_input(int* size_input)
 
     if(0 >= size_input_local) {
         (void) printf("Invalid size");
-        status = STATUS_PART1_GETTING_INPUT_SIZE_INVALID;
-        goto cleanup;
     }
     *size_input = size_input_local;
     status = STATUS_SUCCESS;
@@ -118,11 +141,11 @@ power_of_number(int number,
     double division = 0;
     int power_local = 0;
 
-    if ((0 > number) || (NULL == power) || (NULL == is_power)) {
+    if ((NULL == power) || (NULL == is_power)) {
         status = STATUS_PART1_POWER_OF_NUMBER_INVALID_PARAMS;
         goto cleanup;
     }
-    printf("number is %d",number);
+    //printf("number is %d",number);
 
     division = (double)(number);
     while (1 < division) {
