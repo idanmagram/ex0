@@ -76,7 +76,7 @@ int main()
     (void) printf("Enter numbers:\n");
     for (i = 0; i < size_input; i++) {
         libc_retval = scanf("%d", &number);
-        printf("number is %d",number);
+        //printf("number is %d",number);
         if (1 > libc_retval) {
             (void) printf("Invalid number");
             status = STATUS_SCANF_FAILED;
