@@ -23,7 +23,8 @@ enum exit_status {
     STATUS_PART1_GETTING_INPUT_SCAN_SIZE_FAIlED,
     STATUS_PART1_GETTING_INPUT_SIZE_INVALID,
     STATUS_PART1_MAIN_ARRAY_ALLOCATION_FAILED,
-    STATUS_PART1_MAIN_GETTING_SIZE_INPUT_FAILED
+    STATUS_PART1_MAIN_GETTING_SIZE_INPUT_FAILED,
+    STATUS_PART1_MAIN_NOT_ENOUGH_PARAMS
 };
 
 enum bool {
@@ -54,10 +55,11 @@ int main()
     int number;
     int power = 0;
     int power_sum = 0;
-    int i;
+    int i = 0;
     enum bool is_power = FALSE;
     int* arr = NULL;
     int libc_retval = 0;
+    char c = 0;
 
     status = getting_size_input(&size_input);
     if (status != STATUS_SUCCESS) {
@@ -74,9 +76,9 @@ int main()
     }
 
     (void) printf("Enter numbers:\n");
-    for (i = 0; i < size_input; i++) {
+    do
+    {
         libc_retval = scanf("%d", &number);
-        //printf("number is %d",number);
         if (1 > libc_retval) {
             (void) printf("Invalid number\n");
             status = STATUS_SCANF_FAILED;
@@ -84,7 +86,15 @@ int main()
         } else {
             arr[i] = number;
         }
+        i++;
+    } while (i < size_input);
+    c = (char) getchar();
+    if (c != '\n') {
+        (void) printf("Invalid number\n");
+        status = STATUS_SCANF_FAILED;
+        goto cleanup;
     }
+
     for (i = 0; i < size_input; i++) {
         status = power_of_number(arr[i], &power, &is_power);
         if (status != STATUS_SUCCESS) {
