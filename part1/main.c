@@ -58,6 +58,7 @@ int main()
     enum bool is_power = FALSE;
     int* arr = NULL;
     int libc_retval = 0;
+    char enter = ' ';
 
     status = getting_size_input(&size_input);
     if (status != STATUS_SUCCESS) {
@@ -78,7 +79,7 @@ int main()
         libc_retval = scanf("%d", &number);
         //printf("number is %d",number);
         if (1 > libc_retval) {
-            (void) printf("Invalid number");
+            (void) printf("Invalid number\n");
             status = STATUS_SCANF_FAILED;
             goto cleanup;
         } else {
@@ -124,7 +125,7 @@ enum exit_status getting_size_input(int* size_input)
     }
 
     if(0 >= size_input_local) {
-        (void) printf("Invalid size");
+        (void) printf("Invalid size\n");
     }
     *size_input = size_input_local;
     status = STATUS_SUCCESS;
