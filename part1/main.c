@@ -58,7 +58,6 @@ int main()
     enum bool is_power = FALSE;
     int* arr = NULL;
     int libc_retval = 0;
-    char enter = ' ';
 
     status = getting_size_input(&size_input);
     if (status != STATUS_SUCCESS) {
