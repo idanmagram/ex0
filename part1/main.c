@@ -90,7 +90,7 @@ int main()
     } while (i < size_input);
 
     c = (char) getchar();
-    if (c != '\n' && c != EOF) {
+    if (c != ' ' && c != EOF && c != '\n' && c != '\t') {
         (void) printf("Invalid number\n");
         status = STATUS_SCANF_FAILED;
         goto cleanup;
