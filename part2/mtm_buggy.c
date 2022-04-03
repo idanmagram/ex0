@@ -40,8 +40,10 @@ void swap(char** a, char** b) {
 
 char* getLongestString(char** strings, int size) {
 	char* max = NULL;
+    int max_len = 0;
 	for (int i = 0; i < size; i++) {
-		if (strlen(max) < strlen(strings[i])) {
+		if (max_len < strlen(strings[i])) {
+            max_len = strlen(strings[i]);
 			max = strings[i];
 		}
 	}
