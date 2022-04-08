@@ -1,5 +1,5 @@
 /**************************************************************************
- * filename:    hw0part1.c
+ * filename:    part1.c
  * brief:       Reading numbers and checking if the numbers
  *              are power of 2.
  * author:      Idan Magram
@@ -10,8 +10,6 @@
 /** Headers **************************************************************/
 #include <stdio.h>
 #include <stdlib.h>
-
-/** Macros ***************************************************************/
 
 /** Enums ****************************************************************/
 enum exit_status {
@@ -26,15 +24,25 @@ enum exit_status {
     STATUS_PART1_MAIN_GETTING_SIZE_INPUT_FAILED,
     STATUS_PART1_MAIN_NOT_ENOUGH_PARAMS
 };
-
 enum bool {
     FALSE,
     TRUE
 };
 
 /** Functions *************************************************************/
+/**************************************************************************
+ * Function:    getting_size_input
+ * @brief       Getting the size input from the user
+ * @return      status
+**************************************************************************/
 enum exit_status
 getting_size_input(int* size_input);
+
+/**************************************************************************
+ * Function:    power_of_number
+ * @brief       Checking if a number if a power of 2
+ * @return      status
+**************************************************************************/
 enum exit_status
 power_of_number(int number,
                 int *power,
@@ -46,7 +54,6 @@ power_of_number(int number,
  *              are power of 2.
  * @return      exit status
 **************************************************************************/
-
 
 int main()
 {
@@ -64,6 +71,7 @@ int main()
     status = getting_size_input(&size_input);
     if (status != STATUS_SUCCESS) {
         status = STATUS_PART1_MAIN_GETTING_SIZE_INPUT_FAILED;
+        (void) printf("Invalid size\n");
         goto cleanup;
     }
     if (0 >= size_input) {
@@ -116,6 +124,9 @@ cleanup:
     return (int) status;
 }
 
+/**************************************************************************
+ * Function:    getting_size_input
+**************************************************************************/
 enum exit_status getting_size_input(int* size_input)
 {
     enum exit_status status = STATUS_FAILURE;
@@ -144,6 +155,9 @@ cleanup:
 
 }
 
+/**************************************************************************
+ * Function:    power_of_number
+**************************************************************************/
 enum exit_status
 power_of_number(int number,
                 int *power,
@@ -156,7 +170,6 @@ power_of_number(int number,
         status = STATUS_PART1_POWER_OF_NUMBER_INVALID_PARAMS;
         goto cleanup;
     }
-    //printf("number is %d",number);
 
     division = (double)(number);
     while (1 < division) {
