@@ -105,7 +105,11 @@ int main()
 
     /* Fix edge case, last number is invalid */
     last_char = (char) getchar();
-    if (last_char != ' ' && last_char != EOF && last_char != '\n' && last_char != '\t') {
+    if ((last_char != ' ') &&
+        (last_char != EOF) &&
+        (last_char != '\n') &&
+        (last_char != '\t') &&
+        (last_char != '.')) {
         (void) printf("Invalid number\n");
         status = STATUS_PART1_MAIN_SCAN_LAST_CHAR_FAILED;
         goto cleanup;
